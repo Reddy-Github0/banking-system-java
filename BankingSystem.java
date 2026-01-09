@@ -24,7 +24,6 @@ public class BankingSystem {
 
     public static void main(String[] args) {
 
-        // 🔹 Load data when program starts
         loadFromFile();
 
         while (true) {
@@ -66,7 +65,6 @@ public class BankingSystem {
         }
     }
 
-    // 🔹 Create account
     static void createAccount() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -90,7 +88,6 @@ public class BankingSystem {
         System.out.println("Account created successfully!");
     }
 
-    // 🔹 View all accounts
     static void viewAccounts() {
         if (accounts.isEmpty()) {
             System.out.println("No accounts found.");
@@ -106,7 +103,6 @@ public class BankingSystem {
         }
     }
 
-    // 🔹 Deposit money
     static void depositMoney() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -133,7 +129,6 @@ public class BankingSystem {
         System.out.println("Current Balance: " + account.balance);
     }
 
-    // 🔹 Withdraw money
     static void withdrawMoney() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -165,7 +160,6 @@ public class BankingSystem {
         System.out.println("Remaining Balance: " + account.balance);
     }
 
-    // 🔹 View transaction history
     static void viewTransactions() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -188,7 +182,6 @@ public class BankingSystem {
         }
     }
 
-    // 🔹 Find account
     static Account findAccount(int accNo) {
         for (Account a : accounts) {
             if (a.accountNumber == accNo) {
@@ -198,7 +191,6 @@ public class BankingSystem {
         return null;
     }
 
-    // 🔹 Save data to file
     static void saveToFile() {
         try {
             FileWriter fw = new FileWriter("accounts.txt");
@@ -217,7 +209,6 @@ public class BankingSystem {
         }
     }
 
-    // 🔹 Load data from file
     static void loadFromFile() {
         try {
             File file = new File("accounts.txt");
