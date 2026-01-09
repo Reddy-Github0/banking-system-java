@@ -6,6 +6,8 @@ A simple console-based banking system built using Java.
 - Create bank account
 - View account details
 - Menu-driven program
+- Deposit and Withdraw money
+- Balance enquiry
 
 ## Technologies Used
 - Java
