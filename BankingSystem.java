@@ -17,7 +17,7 @@ class Account {
     }
 }
 
-public class BankingSystem {
+class BankingSystem {
 
     static ArrayList<Account> accounts = new ArrayList<>();
     static Scanner sc = new Scanner(System.in);
@@ -55,7 +55,6 @@ public class BankingSystem {
                     viewTransactions();
                     break;
                 case 6:
-                    // 🔹 Save data before exit
                     saveToFile();
                     System.out.println("Thank you for using Banking System");
                     return;
