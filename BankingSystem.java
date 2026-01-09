@@ -1,10 +1,14 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class Account {
     int accountNumber;
     String name;
     double balance;
+    ArrayList<String> transactions = new ArrayList<>();
 
     Account(int accountNumber, String name, double balance) {
         this.accountNumber = accountNumber;
@@ -20,13 +24,17 @@ public class BankingSystem {
 
     public static void main(String[] args) {
 
+        // 🔹 Load data when program starts
+        loadFromFile();
+
         while (true) {
             System.out.println("\n===== Banking System =====");
             System.out.println("1. Create Account");
             System.out.println("2. View Accounts");
             System.out.println("3. Deposit Money");
             System.out.println("4. Withdraw Money");
-            System.out.println("5. Exit");
+            System.out.println("5. View Transaction History");
+            System.out.println("6. Exit");
             System.out.print("Choose option: ");
 
             int choice = sc.nextInt();
@@ -45,6 +53,11 @@ public class BankingSystem {
                     withdrawMoney();
                     break;
                 case 5:
+                    viewTransactions();
+                    break;
+                case 6:
+                    // 🔹 Save data before exit
+                    saveToFile();
                     System.out.println("Thank you for using Banking System");
                     return;
                 default:
@@ -52,6 +65,8 @@ public class BankingSystem {
             }
         }
     }
+
+    // 🔹 Create account
     static void createAccount() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -68,9 +83,14 @@ public class BankingSystem {
             return;
         }
 
-        accounts.add(new Account(accNo, name, balance));
+        Account acc = new Account(accNo, name, balance);
+        acc.transactions.add("Account created with balance: " + balance);
+
+        accounts.add(acc);
         System.out.println("Account created successfully!");
     }
+
+    // 🔹 View all accounts
     static void viewAccounts() {
         if (accounts.isEmpty()) {
             System.out.println("No accounts found.");
@@ -85,6 +105,8 @@ public class BankingSystem {
             );
         }
     }
+
+    // 🔹 Deposit money
     static void depositMoney() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -105,9 +127,13 @@ public class BankingSystem {
         }
 
         account.balance += amount;
+        account.transactions.add("Deposited: " + amount);
+
         System.out.println("Amount deposited successfully!");
         System.out.println("Current Balance: " + account.balance);
     }
+
+    // 🔹 Withdraw money
     static void withdrawMoney() {
         System.out.print("Enter Account Number: ");
         int accNo = sc.nextInt();
@@ -133,9 +159,36 @@ public class BankingSystem {
         }
 
         account.balance -= amount;
+        account.transactions.add("Withdrawn: " + amount);
+
         System.out.println("Amount withdrawn successfully!");
         System.out.println("Remaining Balance: " + account.balance);
     }
+
+    // 🔹 View transaction history
+    static void viewTransactions() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+
+        Account account = findAccount(accNo);
+
+        if (account == null) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        if (account.transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+            return;
+        }
+
+        System.out.println("--- Transaction History ---");
+        for (String t : account.transactions) {
+            System.out.println(t);
+        }
+    }
+
+    // 🔹 Find account
     static Account findAccount(int accNo) {
         for (Account a : accounts) {
             if (a.accountNumber == accNo) {
@@ -143,5 +196,54 @@ public class BankingSystem {
             }
         }
         return null;
+    }
+
+    // 🔹 Save data to file
+    static void saveToFile() {
+        try {
+            FileWriter fw = new FileWriter("accounts.txt");
+
+            for (Account a : accounts) {
+                fw.write(a.accountNumber + "," + a.name + "," + a.balance);
+
+                for (String t : a.transactions) {
+                    fw.write("," + t);
+                }
+                fw.write("\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Error saving data.");
+        }
+    }
+
+    // 🔹 Load data from file
+    static void loadFromFile() {
+        try {
+            File file = new File("accounts.txt");
+            if (!file.exists()) return;
+
+            Scanner fs = new Scanner(file);
+
+            while (fs.hasNextLine()) {
+                String line = fs.nextLine();
+                String[] data = line.split(",");
+
+                int accNo = Integer.parseInt(data[0]);
+                String name = data[1];
+                double balance = Double.parseDouble(data[2]);
+
+                Account acc = new Account(accNo, name, balance);
+
+                for (int i = 3; i < data.length; i++) {
+                    acc.transactions.add(data[i]);
+                }
+
+                accounts.add(acc);
+            }
+            fs.close();
+        } catch (Exception e) {
+            System.out.println("Error loading data.");
+        }
     }
 }
